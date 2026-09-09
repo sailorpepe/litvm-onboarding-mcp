@@ -4,19 +4,13 @@
 
 **Get an agent onto LitecoinVM — and show it something worth doing there.**
 
-[![MCP](https://img.shields.io/badge/MCP-Streamable_HTTP-blue?style=flat-square)](https://modelcontextprotocol.io)
-[![Chain](https://img.shields.io/badge/LiteForge-chain_4441-A6A9AA?style=flat-square&logo=litecoin&logoColor=white)](https://docs.litvm.com)
-[![Tools](https://img.shields.io/badge/tools-6_read--only-brightgreen?style=flat-square)](#the-six-tools)
-[![Keys](https://img.shields.io/badge/keys-never-brightgreen?style=flat-square)](#it-cannot-touch-your-wallet)
-[![Auth](https://img.shields.io/badge/auth-none-brightgreen?style=flat-square)](#connect)
-[![License](https://img.shields.io/badge/License-BSL_1.1-orange?style=flat-square)](LICENSE.md)
+[![MCP](https://img.shields.io/badge/MCP-Streamable_HTTP-blue?style=flat-square)](https://modelcontextprotocol.io) [![Chain](https://img.shields.io/badge/LiteForge-chain_4441-A6A9AA?style=flat-square&logo=litecoin&logoColor=white)](https://docs.litvm.com) [![Tools](https://img.shields.io/badge/tools-6_read--only-brightgreen?style=flat-square)](#the-six-tools) [![Keys](https://img.shields.io/badge/keys-never-brightgreen?style=flat-square)](#it-cannot-touch-your-wallet) [![Auth](https://img.shields.io/badge/auth-none-brightgreen?style=flat-square)](#connect) [![License](https://img.shields.io/badge/License-BSL_1.1-orange?style=flat-square)](LICENSE.md)
 
 ```
 https://onboard.the-undesirables.com/mcp
 ```
 
-[![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=litvm-onboard&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fonboard.the-undesirables.com%2Fmcp%22%7D)
-[![Install in Cursor](https://img.shields.io/badge/Install-Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)](https://cursor.com/en/install-mcp?name=litvm-onboard&config=eyJ1cmwiOiJodHRwczovL29uYm9hcmQudGhlLXVuZGVzaXJhYmxlcy5jb20vbWNwIn0=)
+[![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=litvm-onboard&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fonboard.the-undesirables.com%2Fmcp%22%7D) [![Install in Cursor](https://img.shields.io/badge/Install-Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)](https://cursor.com/en/install-mcp?name=litvm-onboard&config=eyJ1cmwiOiJodHRwczovL29uYm9hcmQudGhlLXVuZGVzaXJhYmxlcy5jb20vbWNwIn0=)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.png">

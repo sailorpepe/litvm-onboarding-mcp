@@ -8,3 +8,4 @@ python
 bin/
 server.*.py
 !server.py
+_preview.html
