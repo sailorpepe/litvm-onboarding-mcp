@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sailorpepe/litvm-onboarding-mcp",
+  "title": "LitVM Agent Onboarding",
+  "description": "Read-only LitVM LiteForge tools: prove a card price against the chain. No wallet, no keys.",
+  "version": "2.0.0",
+  "repository": {
+    "url": "https://github.com/sailorpepe/litvm-onboarding-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://onboard.the-undesirables.com",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://onboard.the-undesirables.com/mcp"
+    }
+  ]
+}

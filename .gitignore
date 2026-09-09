@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+quest_ledger.sqlite*
+
+# stray interpreter copies and pre-rewrite backups never ship
+python
+bin/
+server.*.py
+!server.py

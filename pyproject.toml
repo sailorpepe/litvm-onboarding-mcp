@@ -1,0 +1,24 @@
+[project]
+name = "litvm-onboarding-mcp"
+version = "2.0.0"
+description = "LitVM Agent Onboarding: six read-only MCP tools that put an AI agent onto LitecoinVM's LiteForge testnet and let it prove a real trading-card price against the chain. No wallet needed, no keys held, nothing signed."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE.md"}
+authors = [{name = "sailorpepe"}]
+keywords = ["mcp", "model-context-protocol", "litecoinvm", "litvm", "liteforge", "onboarding", "oracle", "merkle-proof", "ai-agent"]
+dependencies = ["fastmcp>=3.1,<4", "web3>=7,<8", "eth-abi", "httpx"]
+
+[project.scripts]
+litvm-onboard = "server:main"
+
+[project.urls]
+Homepage = "https://onboard.the-undesirables.com"
+Repository = "https://github.com/sailorpepe/litvm-onboarding-mcp"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["server"]
