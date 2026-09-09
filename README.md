@@ -18,9 +18,13 @@ https://onboard.the-undesirables.com/mcp
 [![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=litvm-onboard&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fonboard.the-undesirables.com%2Fmcp%22%7D)
 [![Install in Cursor](https://img.shields.io/badge/Install-Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)](https://cursor.com/en/install-mcp?name=litvm-onboard&config=eyJ1cmwiOiJodHRwczovL29uYm9hcmQudGhlLXVuZGVzaXJhYmxlcy5jb20vbWNwIn0=)
 
-<img src="assets/demo.gif" alt="A real session: connect, read the chain, verify a card price against it, find the faucet, get a project template" width="860">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/hero-light.png">
+  <img alt="Umbreon VMAX (Alternate Art Secret), $2,368.34. The root read from the chain and the root served by the oracle are the same value, and verifyPrice() returns true. One price of 290,214, proved by 19 sibling hashes, with no wallet and no gas." src="assets/hero-light.png">
+</picture>
 
-<sub>Every line above is a live call. Regenerate it with <code>vhs demo.tape</code>.</sub>
+<sub>Real values, read from the chain at build time. Rebuild with <code>python tools/build_hero.py</code>.</sub>
 
 </div>
 
@@ -57,48 +61,33 @@ public balance — the same thing any block explorer does — and that is the ex
 The last two matter only if you want to **write** to the chain, which costs gas. Reading prices
 never does.
 
-## What a proof looks like
+## What that proof actually says
 
-<table>
-<tr>
-<td width="230" valign="top">
-<img src="https://product-images.tcgplayer.com/fit-in/437x437/246723.jpg" width="210" alt="Umbreon VMAX (Alternate Art Secret)">
-</td>
-<td valign="top">
+**It proves** the price was committed on-chain before you asked, so nobody changed it
+after the fact. **It does not prove** the price is right. One oracle publishes it.
 
-**Umbreon VMAX (Alternate Art Secret)** — `product_id=246723`
-
-The oracle's root and the root read live from the contract:
-
-```
-oracle  0x44e1d191…d64adfca
-chain   0x44e1d191…d64adfca      ← identical
-```
-
-`verifyPrice()` on
-[MerklePriceOracle](https://liteforge.explorer.caldera.xyz/address/0x20A812309AD14aa39B59aE2791972dfe8dDDe80E)
-returns **true** — the contract's own answer, live, over RPC.
-
-[Card page](https://oracle.the-undesirables.com/card/246723) ·
+The root in the picture above is a snapshot and it is stale by design. A new one is
+committed to LiteForge every night, so the value changes daily. The durable claim is not
+"the root is `0x44e1…`" — it is that **the oracle's root and the chain's root always
+agree**, and the contract will confirm it while you watch. Run `litvm_verify_price()` for
+today's, or open the
 [live JSON](https://oracle.the-undesirables.com/api/v1/merkle/proof?product_id=246723)
+and compare it to
+[`merkleRoot()` on the explorer](https://liteforge.explorer.caldera.xyz/address/0x20A812309AD14aa39B59aE2791972dfe8dDDe80E?tab=read_contract).
 
-</td>
-</tr>
-</table>
+Every card comes back with its art and its own
+[page](https://oracle.the-undesirables.com/card/246723), so an agent can show a person
+what it just verified instead of only telling them.
 
-> **That root is a snapshot from 2026-09-07 and it is stale by design.** A new one is committed
-> to LiteForge every night. The claim here is not "the root is `0x44e1…`" — it is that **the
-> oracle's root and the chain's root always agree**, and the contract will confirm it while you
-> watch. Run `litvm_verify_price()` for today's, or open the
-> [live JSON](https://oracle.the-undesirables.com/api/v1/merkle/proof?product_id=246723) and
-> compare it to
-> [`merkleRoot()` on the explorer](https://liteforge.explorer.caldera.xyz/address/0x20A812309AD14aa39B59aE2791972dfe8dDDe80E?tab=read_contract).
+## What a session looks like
 
-**What it proves:** the price was committed on-chain before you asked, so nobody changed it
-after the fact. **What it does not prove:** that the price is right. One oracle publishes it.
+<div align="center">
+<img src="assets/demo.gif" width="700" alt="A recorded session against the live server: reading the chain, listing the deployed contracts, proving the Umbreon VMAX price, checking an address, finding the faucet, and generating a Foundry template.">
+</div>
 
-Every card comes back with its art and its own page, so an agent can show a person what it
-just verified instead of only telling them.
+Six questions, six tools, one connector and no keys. Every line is a live call against
+`onboard.the-undesirables.com`. Regenerate it with `vhs demo.tape`; the script it records
+is [demo.py](demo.py).
 
 ## Three slash commands
 
