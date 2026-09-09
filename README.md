@@ -66,6 +66,14 @@ never does.
 **It proves** the price was committed on-chain before you asked, so nobody changed it
 after the fact. **It does not prove** the price is right. One oracle publishes it.
 
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/proof-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/proof-light.png">
+  <img alt="A Merkle tree with the root at the top. The sibling hashes that make up the proof are highlighted, and the path runs from one card at the bottom up to the root. Three steps: the oracle publishes one root nightly covering every price, before anyone asks; the card's price plus 19 sibling hashes recompute that exact root; the contract does the arithmetic itself and returns true." src="assets/proof-light.png">
+</picture>
+</div>
+
 The root in the picture above is a snapshot and it is stale by design. A new one is
 committed to LiteForge every night, so the value changes daily. The durable claim is not
 "the root is `0x44e1…`" — it is that **the oracle's root and the chain's root always
