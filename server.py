@@ -466,18 +466,100 @@ async def server_card(request):
         "transport": {"type": "streamable-http", "url": "https://onboard.the-undesirables.com/mcp"},
         "tools": [{"name": t, "description": d} for t, d in [
             ("litvm_network", "Chain 4441 connection details: RPC, explorer, faucet, live block, wallet config."),
+            ("litvm_fund", "Request faucet gas for an address so the agent can transact."),
+            ("litvm_status", "Balance and readiness check for an address."),
             ("litvm_contracts", "Directory of live LiteForge contracts, each bytecode-checked."),
             ("litvm_verify_price", "Prove a real card price against the on-chain Merkle root. Read-only."),
             ("litvm_deploy_template", "Foundry/Hardhat/Remix config for chain 4441 plus a consumer contract."),
         ]],
-        "prompts": [{"name": n} for n in ("verify_a_card", "build_on_litvm")],
+        "prompts": [{"name": n} for n in ("get_started_on_litvm", "verify_a_card", "build_on_litvm")],
         "resources": [{"uri": u} for u in ("litvm://network", "litvm://contracts")],
     })
 
 
+# Browsers cannot speak MCP, so a GET without a text/event-stream Accept used to
+# get a raw JSON-RPC error — which is what a human sees when they click a shared
+# link, and what a link unfurl scrapes. Greet them with a real page instead.
+# Palette is the repo's own (sampled for the README hero), not the litvm server's.
+_LANDING = (
+    "<!doctype html><html><head><meta charset=utf-8>"
+    "<meta name=viewport content='width=device-width,initial-scale=1'>"
+    "<title>LitVM Agent Onboarding — MCP Server</title>"
+    "<meta property='og:title' content='LitVM Agent Onboarding — get an AI agent onto LiteForge in one call'>"
+    "<meta property='og:description' content='6 free tools, no keys: chain 4441 RPC and faucet funding, a bytecode-checked contract directory, real card-price verification against the on-chain Merkle root, and ready-to-run Foundry/Hardhat/Remix scaffolding.'>"
+    "<meta property='og:image' content='https://oracle.the-undesirables.com/static/og_onboard.png'>"
+    "<meta property='og:image:width' content='1280'><meta property='og:image:height' content='640'>"
+    "<meta name='twitter:card' content='summary_large_image'>"
+    "<meta name='twitter:image' content='https://oracle.the-undesirables.com/static/og_onboard.png'>"
+    "<style>"
+    ":root{--bg:#0B0D0E;--ink:#F2EFE6;--dim:#68848C;--line:#333D4C;--tok:#64BFD3;--ok:#15CA60}"
+    "body{background:var(--bg);color:var(--ink);font:16px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;"
+    "max-width:46rem;margin:6vh auto;padding:0 1.25rem}"
+    "h1{font-size:1.5rem;color:var(--tok);margin:0 0 .2rem}"
+    "h2{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);"
+    "margin:2.2rem 0 .6rem;font-weight:600}"
+    "code,pre{background:#12171a;border:1px solid var(--line);border-radius:6px}"
+    "code{padding:.15em .4em}pre{padding:1rem;overflow-x:auto}"
+    "a{color:var(--tok)}.n{color:var(--dim)}"
+    "dl{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;margin:0}"
+    "dt{color:var(--ok);white-space:nowrap}dd{margin:0;color:var(--ink)}"
+    "@media(max-width:34rem){dl{grid-template-columns:1fr;gap:.15rem}dd{margin:0 0 .7rem;color:var(--dim)}}"
+    "</style></head><body>"
+    "<h1>LitVM Agent Onboarding</h1>"
+    "<p class=n>MCP endpoint &middot; LiteForge chain 4441</p>"
+    "<p>This URL speaks the <a href='https://modelcontextprotocol.io'>Model Context Protocol</a> "
+    "to AI agents. You are seeing this page because a browser cannot speak MCP &mdash; that is "
+    "expected, and the endpoint is working.</p>"
+    "<p>It exists to take an agent from knowing nothing about LiteForge to having a funded wallet "
+    "and a deployed contract, without a human in the loop. <b>6 tools, 3 prompts, 2 resources. "
+    "Free, no keys, no account.</b></p>"
+    "<h2>Point any MCP client here</h2>"
+    "<pre>https://onboard.the-undesirables.com/mcp</pre>"
+    "<h2>Tools</h2><dl>"
+    "<dt>litvm_network</dt><dd>RPC, explorer, faucet and live block height for chain 4441.</dd>"
+    "<dt>litvm_fund</dt><dd>Request faucet gas for an address so the agent can transact.</dd>"
+    "<dt>litvm_status</dt><dd>Balance and readiness check for an address.</dd>"
+    "<dt>litvm_contracts</dt><dd>Directory of live contracts, each bytecode-checked on chain.</dd>"
+    "<dt>litvm_verify_price</dt><dd>Prove a real card price against the on-chain Merkle root.</dd>"
+    "<dt>litvm_deploy_template</dt><dd>Foundry, Hardhat or Remix config plus a consumer contract.</dd>"
+    "</dl>"
+    "<h2>Prompts</h2><dl>"
+    "<dt>get_started_on_litvm</dt><dd>Whole path: network, funding, first verified call.</dd>"
+    "<dt>verify_a_card</dt><dd>Walk a single price from name to on-chain proof.</dd>"
+    "<dt>build_on_litvm</dt><dd>Scaffold and deploy a contract that reads the oracle.</dd>"
+    "</dl>"
+    "<h2>Start here</h2>"
+    "<p>Ask your agent: <code>get me started on LitVM</code> &mdash; or call "
+    "<code>litvm_network</code> for the raw connection details.</p>"
+    "<p class=n>Claude / Cursor / Windsurf: add as a remote MCP server with the URL above. "
+    "<a href='https://github.com/sailorpepe/litvm-onboarding-mcp'>source</a> &middot; "
+    "by <a href='https://the-undesirables.com'>The Undesirables</a></p>"
+    "</body></html>")
+
+
 def main():
     host = os.environ.get("HOST", "127.0.0.1"); port = int(os.environ.get("PORT", "8413"))
-    mcp.run(transport="http", host=host, port=port, path="/mcp")
+    import uvicorn
+    inner = mcp.http_app(path="/mcp")
+
+    async def app(scope, receive, send):
+        # Scope the greeting to the MCP path and root ONLY. The server also
+        # serves /.well-known/mcp/server-card.json, which scanners fetch with
+        # Accept: application/json — swallowing that would break discovery.
+        if (scope["type"] == "http" and scope.get("method") == "GET"
+                and scope.get("path", "").rstrip("/") in ("", "/mcp")):
+            hdrs = {k.decode().lower(): v.decode()
+                    for k, v in scope.get("headers", [])}
+            if "text/event-stream" not in hdrs.get("accept", ""):
+                body = _LANDING.encode()
+                await send({"type": "http.response.start", "status": 200,
+                            "headers": [(b"content-type", b"text/html; charset=utf-8"),
+                                        (b"content-length", str(len(body)).encode())]})
+                await send({"type": "http.response.body", "body": body})
+                return
+        await inner(scope, receive, send)
+
+    uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == "__main__":
