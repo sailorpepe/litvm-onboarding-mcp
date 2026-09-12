@@ -39,12 +39,12 @@ UA = "litvm-onboard-mcp/1.0"   # no URL in the UA: the Caldera RPC answers 415 t
 # third-party entries are added as they are confirmed on-chain.
 CONTRACTS = [
     {"name": "MerklePriceOracle", "address": "0x20A812309AD14aa39B59aE2791972dfe8dDDe80E",
-     "operator": "The Undesirables", "what": "Daily Merkle root over 289K+ trading-card prices; verifyPrice()/verifyAndRecord() check a card's price against it",
+     "operator": "The Undesirables", "what": "Merkle root over 289K+ USD trading-card prices — last committed 2026-09-07 (the USD feed froze; the root stays verifiable, it just no longer advances); verifyPrice()/verifyAndRecord() check a card's price against it",
      "abi": "https://github.com/sailorpepe/undesirables-x402-server/blob/main/MerklePriceOracle_abi.json"},
     {"name": "GradedPriceOracle", "address": "0x6cca6D7727525595D3A5A1197133086507b82f17",
      "operator": "The Undesirables", "what": "Merkle root over PSA/BGS/CGC graded-slab prices"},
     {"name": "TCGPriceOracleV2", "address": "0x697bF6AE96fb05a47106abd012C39855A16a720E",
-     "operator": "The Undesirables", "what": "50 blue-chip card TWAP feeds, hourly"},
+     "operator": "The Undesirables", "what": "50 blue-chip card TWAP feeds — hourly updater, but the underlying USD prices froze 2026-09-07 so the feed has not moved since"},
     {"name": "SoulPredictionOracle", "address": "0x5503D08D7D167eE23AcE818bff1a00eF77A76dBF",
      "operator": "The Undesirables", "what": "Weekly write-once roots of 4,444 AI souls' locked predictions"},
     {"name": "SoulResultsOracle", "address": "0x6f36dD393C399e7E739d4bb95091c42fEC3E5c6f",
