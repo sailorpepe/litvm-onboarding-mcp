@@ -168,6 +168,6 @@ Or `docker build -t litvm-onboard . && docker run -p 8413:8413 litvm-onboard`.
 
 Built by [sailorpepe](https://github.com/sailorpepe) / The Undesirables LLC.
 
-Related: [litvm-tcg-oracle-mcp](https://github.com/sailorpepe/litvm-tcg-oracle-mcp) — 13 tools, the
+Related: [litvm-tcg-oracle-mcp](https://github.com/sailorpepe/litvm-tcg-oracle-mcp) — 14 tools, the
 oracle through the LitVM lens · [undesirables-mcp-server](https://github.com/sailorpepe/undesirables-mcp-server)
-— the full 22-tool TCG Oracle.
+— the full 23-tool TCG Oracle.
